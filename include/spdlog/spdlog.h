@@ -42,10 +42,7 @@ namespace spdlog
 // logger.info() << "This is another message" << x << y << z;
 std::shared_ptr<logger> get(const std::string& name);
 
-//
-// Drop the reference to this logger.
-//
-void drop(const std::string &name);
+
 
 //
 // Set global formatting
@@ -96,7 +93,7 @@ std::shared_ptr<logger> stderr_logger_st(const std::string& logger_name);
 // Create a syslog logger
 //
 #ifdef __linux__
-std::shared_ptr<logger> syslog_logger(const std::string& logger_name);
+std::shared_ptr<logger> syslog_logger(const std::string& logger_name, const std::string& ident = "", int syslog_option = 0);
 #endif
 
 //
@@ -113,24 +110,40 @@ std::shared_ptr<logger> create(const std::string& logger_name, const It& sinks_b
 template <typename Sink, typename... Args>
 std::shared_ptr<spdlog::logger> create(const std::string& logger_name, const Args&...);
 
-
-
-
-// Stop logging by setting all the loggers to log level OFF
-void stop();
-
-
 //
-// Trace macro enabled only at debug compile
-// Example: SPDLOG_TRACE(my_logger, "Some trace message");
+// Trace & debug macros to be switched on/off at compile time for zero cost debug statements.
+// Note: using these mactors overrides the runtime log threshold of the logger.
 //
-#ifdef _DEBUG
-#define SPDLOG_TRACE(logger, ...) logger->log(__FILE__, " #", __LINE__,": " __VA_ARGS__)
+// Example:
+//
+// Enable debug macro, must be defined before including spdlog.h
+// #define SPDLOG_DEBUG_ON
+// include "spdlog/spdlog.h"
+// SPDLOG_DEBUG(my_logger, "Some debug message {} {}", 1, 3.2);
+//
+
+#ifdef SPDLOG_TRACE_ON
+#define SPDLOG_TRACE(logger, ...) logger->force_log(spdlog::level::trace,  __VA_ARGS__) << " (" << __FILE__ << " #" << __LINE__ <<")";
 #else
-#define SPDLOG_TRACE(logger, ...) {}
+#define SPDLOG_TRACE(logger, ...)
 #endif
 
 
+#ifdef SPDLOG_DEBUG_ON
+#define SPDLOG_DEBUG(logger, ...) logger->force_log(spdlog::level::debug, __VA_ARGS__)
+#else
+#define SPDLOG_DEBUG(logger, ...)
+#endif
+
+
+
+// Drop the reference to the given logger
+void drop(const std::string &name);
+// Drop all references
+void drop_all();
+
 }
+
+
 
 #include "details/spdlog_impl.h"

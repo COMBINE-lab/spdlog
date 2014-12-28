@@ -78,6 +78,11 @@ public:
         _loggers.erase(logger_name);
     }
 
+    void drop_all()
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _loggers.clear();
+    }
     std::shared_ptr<logger> create(const std::string& logger_name, sinks_init_list sinks)
     {
         return create(logger_name, sinks.begin(), sinks.end());
@@ -127,14 +132,6 @@ public:
         _async_mode = false;
     }
 
-    void stop_all()
-    {
-        std::lock_guard<std::mutex> lock(_mutex);
-        _level = level::OFF;
-        for (auto& l : _loggers)
-            l.second->stop();
-    }
-
 
     static registry& instance()
     {
@@ -149,7 +146,7 @@ private:
     std::mutex _mutex;
     std::unordered_map <std::string, std::shared_ptr<logger>> _loggers;
     formatter_ptr _formatter;
-    level::level_enum _level = level::INFO;
+    level::level_enum _level = level::info;
     bool _async_mode = false;
     size_t _async_q_size = 0;
 };

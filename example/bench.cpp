@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
 
         spdlog::set_async_mode(howmany);
 
-        for(int i = 0; i < 5; ++i)
+        for(int i = 0; i < 3; ++i)
         {
             auto as = spdlog::daily_logger_st("as", "logs/daily_async", auto_flush);
             bench_mt(howmany, as, threads);

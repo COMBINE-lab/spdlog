@@ -51,7 +51,6 @@ struct log_msg
             raw << fmt::BasicStringRef<char>(other.raw.data(), other.raw.size());
         if (other.formatted.size())
             formatted << fmt::BasicStringRef<char>(other.formatted.data(), other.formatted.size());
-
     }
 
     log_msg(log_msg&& other) :
@@ -80,7 +79,7 @@ struct log_msg
 
     void clear()
     {
-        level = level::OFF;
+        level = level::off;
         raw.clear();
         formatted.clear();
     }

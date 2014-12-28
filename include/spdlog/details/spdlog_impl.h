@@ -87,11 +87,10 @@ inline std::shared_ptr<spdlog::logger> spdlog::stderr_logger_st(const std::strin
 
 #ifdef __linux__
 // Create syslog logger
-inline std::shared_ptr<spdlog::logger> spdlog::syslog_logger(const std::string& logger_name)
+inline std::shared_ptr<spdlog::logger> spdlog::syslog_logger(const std::string& logger_name, const std::string& syslog_ident, int syslog_option)
 {
-    return create<spdlog::sinks::syslog_sink>(logger_name);
+    return create<spdlog::sinks::syslog_sink>(logger_name, syslog_ident, syslog_option);
 }
-
 #endif
 
 
@@ -143,7 +142,8 @@ inline void spdlog::set_sync_mode()
     details::registry::instance().set_sync_mode();
 }
 
-inline void spdlog::stop()
+inline void spdlog::drop_all()
 {
-    return details::registry::instance().stop_all();
+    details::registry::instance().drop_all();
 }
+
