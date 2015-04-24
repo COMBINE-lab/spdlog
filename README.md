@@ -1,5 +1,7 @@
 # spdlog
 
+[![Join the chat at https://gitter.im/COMBINE-lab/spdlog](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/COMBINE-lab/spdlog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Very fast, header only, C++ logging library.
 
 ## Install
